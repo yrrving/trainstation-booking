@@ -14,22 +14,31 @@ import bookingRoutes from './routes/bookings.js';
 const app = express();
 
 // Middleware
+const isProduction = process.env.NODE_ENV === 'production';
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Vite default port
+    origin: frontendUrl,
     credentials: true,
   })
 );
 app.use(express.json());
+
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
 app.use(
   session({
-    secret: 'trainstation-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET || 'trainstation-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Set to true in production with HTTPS
+      secure: isProduction,
       httpOnly: true,
       maxAge: 240 * 60 * 1000, // 240 minutes (4 hours)
+      sameSite: isProduction ? 'none' : 'lax',
     },
   })
 );
