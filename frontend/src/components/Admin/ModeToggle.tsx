@@ -51,27 +51,27 @@ export default function ModeToggle({ location, onUpdate }: ModeToggleProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold">Aktiverade bokningssätt</h3>
-      <p className="text-sm text-gray-600">Välj vilka bokningssätt som ska vara tillgängliga för {location.name}</p>
+      <h3 className="font-semibold text-gray-100">Aktiverade bokningssätt</h3>
+      <p className="text-sm text-gray-400">Välj vilka bokningssätt som ska vara tillgängliga för {location.name}</p>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-sm">{error}</div>}
+      {error && <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-2 rounded text-sm">{error}</div>}
 
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded text-sm">
+        <div className="bg-green-900/50 border border-green-700 text-green-300 px-4 py-2 rounded text-sm">
           Uppdaterat!
         </div>
       )}
 
       <div className="space-y-2">
         {ALL_MODES.map((mode) => (
-          <label key={mode} className="flex items-center gap-3 p-3 bg-white border rounded-md cursor-pointer hover:bg-gray-50">
+          <label key={mode} className="flex items-center gap-3 p-3 bg-gray-700 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-600">
             <input
               type="checkbox"
               checked={enabledModes.includes(mode)}
               onChange={() => handleToggleMode(mode)}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+              className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 bg-gray-600 border-gray-500"
             />
-            <span className="flex-1">{MODE_LABELS[mode]}</span>
+            <span className="flex-1 text-gray-200">{MODE_LABELS[mode]}</span>
           </label>
         ))}
       </div>

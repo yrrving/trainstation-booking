@@ -78,14 +78,14 @@ export default function VisitorPage() {
     : step;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       <Header />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button (except on first and last step) */}
         {currentStep !== 'location' && currentStep !== 'confirmation' && (
           <button
             onClick={handleBack}
-            className="mb-6 text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
+            className="mb-6 text-blue-400 hover:text-blue-300 font-medium flex items-center gap-2"
           >
             ← Tillbaka
           </button>

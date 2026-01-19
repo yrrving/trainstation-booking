@@ -49,80 +49,140 @@ export default function BookingList({ filters }: BookingListProps) {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Laddar bokningar...</div>;
+    return <div className="text-center py-8 text-gray-300">Laddar bokningar...</div>;
   }
 
   if (error) {
-    return <div className="text-red-600 text-center py-8">Fel: {error}</div>;
+    return <div className="text-red-400 text-center py-8">Fel: {error}</div>;
   }
 
   if (bookings.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-600">Inga bokningar hittades med de valda filtren.</div>
+      <div className="text-center py-8 text-gray-400">Inga bokningar hittades med de valda filtren.</div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Datum & Tid</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plats</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bokningssätt</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Namn</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kontakt</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Antal</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Åtgärder</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          {bookings.map((booking) => {
-            const startTime = DateTime.fromISO(booking.start_time, { zone: 'Europe/Stockholm' });
+    <>
+      {/* Mobile view - cards */}
+      <div className="md:hidden space-y-4">
+        {bookings.map((booking) => {
+          const startTime = DateTime.fromISO(booking.start_time, { zone: 'Europe/Stockholm' });
 
-            return (
-              <tr key={booking.id}>
-                <td className="px-4 py-3 text-sm">
-                  <div>{startTime.toFormat('yyyy-MM-dd')}</div>
-                  <div className="text-gray-500">{startTime.toFormat('HH:mm')}</div>
-                </td>
-                <td className="px-4 py-3 text-sm">{booking.location_id}</td>
-                <td className="px-4 py-3 text-sm">{booking.mode}</td>
-                <td className="px-4 py-3 text-sm font-medium">{booking.booker.name}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">
-                  {booking.booker.email && <div>{booking.booker.email}</div>}
-                  {booking.booker.phone && <div>{booking.booker.phone}</div>}
-                </td>
-                <td className="px-4 py-3 text-sm">{booking.num_people}</td>
-                <td className="px-4 py-3 text-sm">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      booking.state === BookingState.CONFIRMED
-                        ? 'bg-green-100 text-green-800'
-                        : booking.state === BookingState.CANCELLED
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}
-                  >
-                    {booking.state}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  {booking.state !== BookingState.CANCELLED && (
-                    <button
-                      onClick={() => handleCancel(booking.id)}
-                      className="text-red-600 hover:text-red-800 font-medium"
+          return (
+            <div key={booking.id} className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="font-medium text-gray-100">{booking.booker.name}</div>
+                  <div className="text-sm text-gray-400">{booking.mode}</div>
+                </div>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    booking.state === BookingState.CONFIRMED
+                      ? 'bg-green-900/50 text-green-300'
+                      : booking.state === BookingState.CANCELLED
+                      ? 'bg-red-900/50 text-red-300'
+                      : 'bg-yellow-900/50 text-yellow-300'
+                  }`}
+                >
+                  {booking.state}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-gray-500">Datum:</span>
+                  <div className="text-gray-200">{startTime.toFormat('yyyy-MM-dd HH:mm')}</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Antal:</span>
+                  <div className="text-gray-200">{booking.num_people} pers</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Plats:</span>
+                  <div className="text-gray-200">{booking.location_id}</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Kontakt:</span>
+                  <div className="text-gray-200 text-xs">
+                    {booking.booker.email || booking.booker.phone || '-'}
+                  </div>
+                </div>
+              </div>
+              {booking.state !== BookingState.CANCELLED && (
+                <button
+                  onClick={() => handleCancel(booking.id)}
+                  className="w-full py-2 text-red-400 hover:text-red-300 font-medium text-sm border border-red-900/50 rounded-md hover:bg-red-900/20"
+                >
+                  Avboka
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop view - table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full bg-gray-800 border border-gray-700 rounded-lg">
+          <thead className="bg-gray-700">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Datum & Tid</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Plats</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Bokningssätt</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Namn</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Kontakt</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Antal</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Åtgärder</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-700">
+            {bookings.map((booking) => {
+              const startTime = DateTime.fromISO(booking.start_time, { zone: 'Europe/Stockholm' });
+
+              return (
+                <tr key={booking.id}>
+                  <td className="px-4 py-3 text-sm text-gray-200">
+                    <div>{startTime.toFormat('yyyy-MM-dd')}</div>
+                    <div className="text-gray-400">{startTime.toFormat('HH:mm')}</div>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-200">{booking.location_id}</td>
+                  <td className="px-4 py-3 text-sm text-gray-200">{booking.mode}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-100">{booking.booker.name}</td>
+                  <td className="px-4 py-3 text-sm text-gray-400">
+                    {booking.booker.email && <div>{booking.booker.email}</div>}
+                    {booking.booker.phone && <div>{booking.booker.phone}</div>}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-200">{booking.num_people}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        booking.state === BookingState.CONFIRMED
+                          ? 'bg-green-900/50 text-green-300'
+                          : booking.state === BookingState.CANCELLED
+                          ? 'bg-red-900/50 text-red-300'
+                          : 'bg-yellow-900/50 text-yellow-300'
+                      }`}
                     >
-                      Avboka
-                    </button>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                      {booking.state}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm">
+                    {booking.state !== BookingState.CANCELLED && (
+                      <button
+                        onClick={() => handleCancel(booking.id)}
+                        className="text-red-400 hover:text-red-300 font-medium"
+                      >
+                        Avboka
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }

@@ -39,18 +39,18 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* View Tabs */}
-        <div className="flex gap-4 mb-6 border-b">
+        <div className="flex gap-4 mb-6 border-b border-gray-700">
           <button
             onClick={() => setView('location_management')}
             className={`px-4 py-2 font-medium transition ${
               view === 'location_management'
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-blue-500 text-blue-400'
+                : 'text-gray-400 hover:text-gray-200'
             }`}
           >
             Platser & Bokningsalternativ
@@ -59,8 +59,8 @@ export default function AdminPage() {
             onClick={() => setView('booking_management')}
             className={`px-4 py-2 font-medium transition ${
               view === 'booking_management'
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-blue-500 text-blue-400'
+                : 'text-gray-400 hover:text-gray-200'
             }`}
           >
             Hantera bokningar
@@ -69,10 +69,10 @@ export default function AdminPage() {
 
         {/* Location Management View */}
         {view === 'location_management' && (
-          <div className="grid grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Sidebar with locations */}
-            <div className="col-span-3">
-              <div className="bg-white rounded-lg border p-4">
+            <div className="lg:col-span-3">
+              <div className="bg-gray-800 rounded-lg border border-gray-700 p-4">
                 <LocationTree
                   key={refreshKey}
                   onSelectLocation={setSelectedLocation}
@@ -82,25 +82,25 @@ export default function AdminPage() {
             </div>
 
             {/* Main content */}
-            <div className="col-span-9">
+            <div className="lg:col-span-9">
               {!selectedLocation ? (
-                <div className="bg-white rounded-lg border p-8 text-center text-gray-600">
+                <div className="bg-gray-800 rounded-lg border border-gray-700 p-8 text-center text-gray-400">
                   Välj en plats till vänster för att börja
                 </div>
               ) : (
                 <div className="space-y-6">
                   {/* Mode Toggle */}
-                  <div className="bg-white rounded-lg border p-6">
+                  <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
                     <ModeToggle location={selectedLocation} onUpdate={handleLocationUpdate} />
                   </div>
 
                   {/* Mode Tabs */}
-                  <div className="bg-white rounded-lg border">
-                    <div className="border-b px-6 py-4">
-                      <h3 className="font-semibold">Bokningsalternativ per bokningssätt</h3>
+                  <div className="bg-gray-800 rounded-lg border border-gray-700">
+                    <div className="border-b border-gray-700 px-6 py-4">
+                      <h3 className="font-semibold text-gray-100">Bokningsalternativ per bokningssätt</h3>
                     </div>
 
-                    <div className="flex gap-2 px-6 py-3 border-b overflow-x-auto">
+                    <div className="flex gap-2 px-6 py-3 border-b border-gray-700 overflow-x-auto">
                       {selectedLocation.enabled_modes.map((mode) => (
                         <button
                           key={mode}
@@ -111,8 +111,8 @@ export default function AdminPage() {
                           }}
                           className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition ${
                             selectedMode === mode
-                              ? 'bg-blue-100 text-blue-900'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              ? 'bg-blue-900/50 text-blue-300'
+                              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                           }`}
                         >
                           {MODE_LABELS[mode]}
@@ -122,7 +122,7 @@ export default function AdminPage() {
 
                     <div className="p-6">
                       {!selectedMode ? (
-                        <div className="text-center text-gray-600 py-8">
+                        <div className="text-center text-gray-400 py-8">
                           Välj ett bokningssätt ovan för att se alternativ
                         </div>
                       ) : showNewOptionForm || editingOption ? (
@@ -139,7 +139,7 @@ export default function AdminPage() {
                       ) : (
                         <div className="space-y-4">
                           <div className="flex justify-between items-center">
-                            <h4 className="font-medium">Befintliga alternativ</h4>
+                            <h4 className="font-medium text-gray-200">Befintliga alternativ</h4>
                             <button
                               onClick={() => setShowNewOptionForm(true)}
                               className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"

@@ -67,24 +67,24 @@ export default function BookingFilters({ onFilterChange }: BookingFiltersProps) 
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg border space-y-4">
+    <div className="bg-gray-800 p-4 rounded-lg border border-gray-700 space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Filtrera bokningar</h3>
+        <h3 className="font-semibold text-gray-100">Filtrera bokningar</h3>
         <button
           onClick={handleReset}
-          className="text-sm text-blue-600 hover:text-blue-700"
+          className="text-sm text-blue-400 hover:text-blue-300"
         >
           Återställ
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Plats</label>
+          <label className="block text-xs font-medium text-gray-300 mb-1">Plats</label>
           <select
             value={filters.location_id}
             onChange={(e) => setFilters({ ...filters, location_id: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md text-sm"
           >
             <option value="">Alla</option>
             {locations.map((loc) => (
@@ -96,11 +96,11 @@ export default function BookingFilters({ onFilterChange }: BookingFiltersProps) 
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Bokningssätt</label>
+          <label className="block text-xs font-medium text-gray-300 mb-1">Bokningssätt</label>
           <select
             value={filters.mode}
             onChange={(e) => setFilters({ ...filters, mode: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md text-sm"
           >
             <option value="">Alla</option>
             {Object.entries(MODE_LABELS).map(([mode, label]) => (
@@ -112,31 +112,31 @@ export default function BookingFilters({ onFilterChange }: BookingFiltersProps) 
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Från datum</label>
+          <label className="block text-xs font-medium text-gray-300 mb-1">Från datum</label>
           <input
             type="date"
             value={filters.start_date}
             onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Till datum</label>
+          <label className="block text-xs font-medium text-gray-300 mb-1">Till datum</label>
           <input
             type="date"
             value={filters.end_date}
             onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
+          <label className="block text-xs font-medium text-gray-300 mb-1">Status</label>
           <select
             value={filters.state}
             onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md text-sm"
           >
             <option value="">Alla</option>
             <option value={BookingState.CONFIRMED}>Bekräftad</option>

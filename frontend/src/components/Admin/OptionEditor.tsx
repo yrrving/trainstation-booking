@@ -95,63 +95,63 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border">
-      <h2 className="text-xl font-semibold">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gray-700 p-6 rounded-lg border border-gray-600">
+      <h2 className="text-xl font-semibold text-gray-100">
         {existingOption ? 'Redigera bokningsalternativ' : 'Nytt bokningsalternativ'}
       </h2>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>}
+      {error && <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded">{error}</div>}
 
       {/* Basic Info */}
       <div className="space-y-4">
-        <h3 className="font-semibold text-sm text-gray-700">Grundläggande information</h3>
+        <h3 className="font-semibold text-sm text-gray-300">Grundläggande information</h3>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Namn *</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Namn *</label>
           <input
             type="text"
             required
             value={formData.label}
             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="t.ex. Studio A"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Beskrivning *</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Beskrivning *</label>
           <textarea
             required
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Beskriv vad som kan bokas"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Längd (minuter) *</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Längd (minuter) *</label>
             <input
               type="number"
               required
               min={1}
               value={formData.duration_minutes}
               onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Max antal personer *</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Max antal personer *</label>
             <input
               type="number"
               required
               min={1}
               value={formData.max_people}
               onChange={(e) => setFormData({ ...formData, max_people: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -161,19 +161,19 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
             type="checkbox"
             checked={formData.is_active}
             onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-            className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+            className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 bg-gray-600 border-gray-500"
           />
-          <span className="text-sm font-medium text-gray-700">Aktivt (visas för besökare)</span>
+          <span className="text-sm font-medium text-gray-300">Aktivt (visas för besökare)</span>
         </label>
       </div>
 
       {/* Rules */}
-      <div className="space-y-4 border-t pt-4">
-        <h3 className="font-semibold text-sm text-gray-700">Bokningsregler</h3>
+      <div className="space-y-4 border-t border-gray-600 pt-4">
+        <h3 className="font-semibold text-sm text-gray-300">Bokningsregler</h3>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Slot-inkrement (min) *
             </label>
             <input
@@ -182,13 +182,13 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
               min={1}
               value={formData.slot_increment_minutes}
               onChange={(e) => setFormData({ ...formData, slot_increment_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Hur ofta slots genereras (t.ex. 30 eller 60 min)</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Min framförhållning (min) *
             </label>
             <input
@@ -197,13 +197,13 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
               min={0}
               value={formData.min_advance_minutes}
               onChange={(e) => setFormData({ ...formData, min_advance_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Minsta tid innan bokning kan göras</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Max framförhållning (dagar) *
             </label>
             <input
@@ -212,13 +212,13 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
               min={1}
               value={formData.max_advance_days}
               onChange={(e) => setFormData({ ...formData, max_advance_days: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Hur långt fram kan man boka</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Avbokningsgräns (min) *
             </label>
             <input
@@ -227,33 +227,33 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
               min={0}
               value={formData.cancellation_cutoff_minutes}
               onChange={(e) => setFormData({ ...formData, cancellation_cutoff_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Minsta tid innan start för avbokning</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Buffer före (min) *</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Buffer före (min) *</label>
             <input
               type="number"
               required
               min={0}
               value={formData.buffer_before_minutes}
               onChange={(e) => setFormData({ ...formData, buffer_before_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Buffert innan bokningen</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Buffer efter (min) *</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Buffer efter (min) *</label>
             <input
               type="number"
               required
               min={0}
               value={formData.buffer_after_minutes}
               onChange={(e) => setFormData({ ...formData, buffer_after_minutes: parseInt(e.target.value) })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <p className="text-xs text-gray-500 mt-1">Buffert efter bokningen</p>
           </div>
@@ -261,24 +261,24 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
       </div>
 
       {/* Weekly Hours */}
-      <div className="space-y-4 border-t pt-4">
+      <div className="space-y-4 border-t border-gray-600 pt-4">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-sm text-gray-700">Öppettider</h3>
+          <h3 className="font-semibold text-sm text-gray-300">Öppettider</h3>
           <button
             type="button"
             onClick={addWeeklyHour}
-            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-md text-sm hover:bg-blue-100"
+            className="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-md text-sm hover:bg-blue-800/50"
           >
             + Lägg till tid
           </button>
         </div>
 
         {weeklyHours.map((wh, index) => (
-          <div key={index} className="flex gap-2 items-start">
+          <div key={index} className="flex flex-wrap gap-2 items-start">
             <select
               value={wh.weekday}
               onChange={(e) => updateWeeklyHour(index, 'weekday', parseInt(e.target.value))}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {WEEKDAY_LABELS.map((label, day) => (
                 <option key={day} value={day}>
@@ -291,22 +291,22 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
               type="time"
               value={wh.start}
               onChange={(e) => updateWeeklyHour(index, 'start', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <span className="py-2">-</span>
+            <span className="py-2 text-gray-400">-</span>
 
             <input
               type="time"
               value={wh.end}
               onChange={(e) => updateWeeklyHour(index, 'end', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <button
               type="button"
               onClick={() => removeWeeklyHour(index)}
-              className="px-3 py-2 bg-red-50 text-red-700 rounded-md text-sm hover:bg-red-100"
+              className="px-3 py-2 bg-red-900/50 text-red-300 rounded-md text-sm hover:bg-red-800/50"
             >
               Ta bort
             </button>
@@ -319,7 +319,7 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md font-medium transition"
+          className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-gray-200 rounded-md font-medium transition"
         >
           Avbryt
         </button>

@@ -69,45 +69,47 @@ export default function AvailabilityCalendar({ bookingOption, onSelectSlot }: Av
   }, {} as Record<string, TimeSlot[]>);
 
   if (loading) {
-    return <div className="text-center py-8">Laddar tillgängliga tider...</div>;
+    return <div className="text-center py-8 text-gray-300">Laddar tillgängliga tider...</div>;
   }
 
   if (error) {
-    return <div className="text-red-600 text-center py-8">Fel: {error}</div>;
+    return <div className="text-red-400 text-center py-8">Fel: {error}</div>;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Välj tid</h2>
-        <p className="text-sm text-gray-600">{bookingOption.label}</p>
+        <h2 className="text-xl font-semibold mb-2 text-gray-100">Välj tid</h2>
+        <p className="text-sm text-gray-400">{bookingOption.label}</p>
       </div>
 
       {/* Date navigation */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={handlePrevWeek}
-          className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm"
-        >
-          ← Förra veckan
-        </button>
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+        <div className="flex gap-2 order-2 sm:order-1">
+          <button
+            onClick={handlePrevWeek}
+            className="flex-1 sm:flex-none px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-md text-sm"
+          >
+            ← Förra
+          </button>
+          <button
+            onClick={handleNextWeek}
+            className="flex-1 sm:flex-none px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-md text-sm sm:order-3"
+          >
+            Nästa →
+          </button>
+        </div>
         <input
           type="date"
           value={selectedDate}
           onChange={handleDateChange}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+          className="flex-1 px-3 py-2 border border-gray-600 bg-gray-700 text-gray-100 rounded-md order-1 sm:order-2"
         />
-        <button
-          onClick={handleNextWeek}
-          className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm"
-        >
-          Nästa vecka →
-        </button>
       </div>
 
       {/* Available slots grouped by date */}
       {Object.keys(slotsByDate).length === 0 ? (
-        <div className="text-center py-8 text-gray-600">
+        <div className="text-center py-8 text-gray-400">
           Inga lediga tider under denna period. Prova en annan vecka.
         </div>
       ) : (
@@ -121,9 +123,9 @@ export default function AvailabilityCalendar({ bookingOption, onSelectSlot }: Av
             if (availableSlots.length === 0) return null;
 
             return (
-              <div key={date} className="bg-white rounded-lg border p-4">
-                <h3 className="font-semibold mb-3 capitalize">{dayName}</h3>
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              <div key={date} className="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <h3 className="font-semibold mb-3 capitalize text-gray-100">{dayName}</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
                   {availableSlots.map((slot) => {
                     const startTime = DateTime.fromISO(slot.start_time, {
                       zone: 'Europe/Stockholm',
@@ -133,7 +135,7 @@ export default function AvailabilityCalendar({ bookingOption, onSelectSlot }: Av
                       <button
                         key={slot.start_time}
                         onClick={() => onSelectSlot(slot)}
-                        className="px-3 py-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:border-blue-400 rounded-md text-sm font-medium text-blue-700 transition"
+                        className="px-3 py-2 bg-blue-900/50 border border-blue-700 hover:bg-blue-800/50 hover:border-blue-500 rounded-md text-sm font-medium text-blue-300 transition"
                       >
                         {startTime}
                       </button>

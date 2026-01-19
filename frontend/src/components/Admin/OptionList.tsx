@@ -49,16 +49,16 @@ export default function OptionList({ locationId, mode, onEdit, onRefresh }: Opti
   }
 
   if (loading) {
-    return <div className="text-sm text-gray-500 py-4">Laddar alternativ...</div>;
+    return <div className="text-sm text-gray-400 py-4">Laddar alternativ...</div>;
   }
 
   if (error) {
-    return <div className="text-sm text-red-600 py-4">Fel: {error}</div>;
+    return <div className="text-sm text-red-400 py-4">Fel: {error}</div>;
   }
 
   if (options.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-600 bg-gray-50 rounded-lg border">
+      <div className="text-center py-8 text-gray-400 bg-gray-700 rounded-lg border border-gray-600">
         Inga bokningsalternativ har skapats ännu.
       </div>
     );
@@ -67,15 +67,15 @@ export default function OptionList({ locationId, mode, onEdit, onRefresh }: Opti
   return (
     <div className="space-y-3">
       {options.map((option) => (
-        <div key={option.id} className="bg-white border rounded-lg p-4">
+        <div key={option.id} className="bg-gray-700 border border-gray-600 rounded-lg p-4">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h4 className="font-semibold">{option.label}</h4>
-              <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+              <h4 className="font-semibold text-gray-100">{option.label}</h4>
+              <p className="text-sm text-gray-400 mt-1">{option.description}</p>
               <div className="flex gap-4 mt-2 text-xs text-gray-500">
                 <span>⏱️ {option.duration_minutes} min</span>
                 <span>👥 Max {option.capacity.max_people}</span>
-                <span className={option.is_active ? 'text-green-600' : 'text-red-600'}>
+                <span className={option.is_active ? 'text-green-400' : 'text-red-400'}>
                   {option.is_active ? '✓ Aktivt' : '✗ Inaktivt'}
                 </span>
               </div>
@@ -83,13 +83,13 @@ export default function OptionList({ locationId, mode, onEdit, onRefresh }: Opti
             <div className="flex gap-2">
               <button
                 onClick={() => onEdit(option)}
-                className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                className="px-3 py-1 text-sm bg-blue-900/50 text-blue-300 rounded hover:bg-blue-800/50"
               >
                 Redigera
               </button>
               <button
                 onClick={() => handleDelete(option.id)}
-                className="px-3 py-1 text-sm bg-red-50 text-red-700 rounded hover:bg-red-100"
+                className="px-3 py-1 text-sm bg-red-900/50 text-red-300 rounded hover:bg-red-800/50"
               >
                 Ta bort
               </button>

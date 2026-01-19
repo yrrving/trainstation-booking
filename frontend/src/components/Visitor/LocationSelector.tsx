@@ -33,25 +33,25 @@ export default function LocationSelector() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Laddar platser...</div>;
+    return <div className="text-center py-8 text-gray-300">Laddar platser...</div>;
   }
 
   if (error) {
-    return <div className="text-red-600 text-center py-8">Fel: {error}</div>;
+    return <div className="text-red-400 text-center py-8">Fel: {error}</div>;
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Välj plats</h2>
+      <h2 className="text-xl font-semibold text-gray-100">Välj plats</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {locations.map((location) => (
           <button
             key={location.id}
             onClick={() => handleSelectLocation(location.id)}
-            className="p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition text-left"
+            className="p-6 bg-gray-800 border-2 border-gray-700 rounded-lg hover:border-blue-500 hover:shadow-lg transition text-left"
           >
-            <h3 className="font-semibold text-lg">{location.name}</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <h3 className="font-semibold text-lg text-gray-100">{location.name}</h3>
+            <p className="text-sm text-gray-400 mt-1">
               {location.enabled_modes.length} bokningssätt tillgängliga
             </p>
           </button>

@@ -34,16 +34,16 @@ export default function OptionSelector({ locationId, mode, onSelectOption }: Opt
   }
 
   if (loading) {
-    return <div className="text-center py-8">Laddar alternativ...</div>;
+    return <div className="text-center py-8 text-gray-300">Laddar alternativ...</div>;
   }
 
   if (error) {
-    return <div className="text-red-600 text-center py-8">Fel: {error}</div>;
+    return <div className="text-red-400 text-center py-8">Fel: {error}</div>;
   }
 
   if (options.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-600">
+      <div className="text-center py-8 text-gray-400">
         Inga bokningsalternativ tillgängliga för detta bokningssätt.
       </div>
     );
@@ -51,16 +51,16 @@ export default function OptionSelector({ locationId, mode, onSelectOption }: Opt
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Välj vad du vill boka</h2>
+      <h2 className="text-xl font-semibold text-gray-100">Välj vad du vill boka</h2>
       <div className="grid grid-cols-1 gap-4">
         {options.map((option) => (
           <button
             key={option.id}
             onClick={() => onSelectOption(option)}
-            className="p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition text-left"
+            className="p-6 bg-gray-800 border-2 border-gray-700 rounded-lg hover:border-blue-500 hover:shadow-lg transition text-left"
           >
-            <h3 className="font-semibold text-lg">{option.label}</h3>
-            <p className="text-gray-600 mt-2">{option.description}</p>
+            <h3 className="font-semibold text-lg text-gray-100">{option.label}</h3>
+            <p className="text-gray-400 mt-2">{option.description}</p>
             <div className="mt-3 flex gap-4 text-sm text-gray-500">
               <span>⏱️ {option.duration_minutes} min</span>
               <span>👥 Max {option.capacity.max_people} personer</span>
