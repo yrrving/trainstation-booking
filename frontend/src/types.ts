@@ -12,13 +12,14 @@ export type Location = {
   enabled_modes: BookingMode[];
 }
 
-export enum BookingMode {
-  HANDLEDNING = 'handledning',
-  RUM = 'rum',
-  STUDIEBESOK = 'studiebesök',
-  GRUPP = 'grupp',
-  INDIVIDUELL = 'individuell',
-}
+export const BookingMode = {
+  HANDLEDNING: 'handledning',
+  RUM: 'rum',
+  STUDIEBESOK: 'studiebesök',
+  GRUPP: 'grupp',
+  INDIVIDUELL: 'individuell',
+} as const;
+export type BookingMode = typeof BookingMode[keyof typeof BookingMode];
 
 export type WeeklyHours = {
   weekday: number;
@@ -50,11 +51,12 @@ export type BookingOption = {
   updated_at: string;
 }
 
-export enum BookingState {
-  PENDING = 'pending',
-  CONFIRMED = 'confirmed',
-  CANCELLED = 'cancelled',
-}
+export const BookingState = {
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  CANCELLED: 'cancelled',
+} as const;
+export type BookingState = typeof BookingState[keyof typeof BookingState];
 
 export type Booking = {
   id: string;

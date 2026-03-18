@@ -1,5 +1,11 @@
 // API client for backend communication
 
+import {
+  mockAuthAPI, mockSessionAPI, mockLocationsAPI,
+  mockBookingOptionsAPI, mockAvailabilityAPI, mockBookingsAPI,
+} from './mockClient';
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
@@ -21,7 +27,7 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 // Auth API
-export const authAPI = {
+export const authAPI = USE_MOCK ? mockAuthAPI : {
   login: (username: string, password: string) =>
     fetchJSON(`${API_BASE}/auth/login`, {
       method: 'POST',
@@ -37,7 +43,7 @@ export const authAPI = {
 };
 
 // Session API
-export const sessionAPI = {
+export const sessionAPI = USE_MOCK ? mockSessionAPI : {
   setLocation: (location_id: string) =>
     fetchJSON(`${API_BASE}/session/location`, {
       method: 'POST',
@@ -46,7 +52,7 @@ export const sessionAPI = {
 };
 
 // Locations API
-export const locationsAPI = {
+export const locationsAPI = USE_MOCK ? mockLocationsAPI : {
   getAll: () => fetchJSON(`${API_BASE}/locations`),
 
   getById: (id: string) => fetchJSON(`${API_BASE}/locations/${id}`),
@@ -59,7 +65,7 @@ export const locationsAPI = {
 };
 
 // Booking Options API
-export const bookingOptionsAPI = {
+export const bookingOptionsAPI = USE_MOCK ? mockBookingOptionsAPI : {
   getAll: (params?: { location_id?: string; mode?: string; is_active?: boolean }) => {
     const searchParams = new URLSearchParams();
     if (params?.location_id) searchParams.append('location_id', params.location_id);
@@ -90,7 +96,7 @@ export const bookingOptionsAPI = {
 };
 
 // Availability API
-export const availabilityAPI = {
+export const availabilityAPI = USE_MOCK ? mockAvailabilityAPI : {
   getSlots: (booking_option_id: string, start_date: string, end_date: string) => {
     const params = new URLSearchParams({ booking_option_id, start_date, end_date });
     return fetchJSON(`${API_BASE}/availability?${params}`);
@@ -98,7 +104,7 @@ export const availabilityAPI = {
 };
 
 // Bookings API
-export const bookingsAPI = {
+export const bookingsAPI = USE_MOCK ? mockBookingsAPI : {
   getAll: (params?: { location_id?: string; mode?: string; start_date?: string; end_date?: string; state?: string }) => {
     const searchParams = new URLSearchParams();
     if (params?.location_id) searchParams.append('location_id', params.location_id);

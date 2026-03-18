@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+const Router = import.meta.env.VITE_USE_MOCK === 'true' ? HashRouter : BrowserRouter;
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { SessionProvider } from './hooks/useSession';
 import LoginPage from './pages/LoginPage';
@@ -73,12 +75,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <AuthProvider>
         <SessionProvider>
           <AppRoutes />
         </SessionProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
