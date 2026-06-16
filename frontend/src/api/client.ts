@@ -2,7 +2,7 @@
 
 import {
   mockAuthAPI, mockSessionAPI, mockLocationsAPI,
-  mockBookingOptionsAPI, mockAvailabilityAPI, mockBookingsAPI,
+  mockBookingOptionsAPI, mockAvailabilityAPI, mockBookingsAPI, mockWishesAPI,
 } from './mockClient';
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
@@ -118,6 +118,8 @@ export const bookingsAPI = USE_MOCK ? mockBookingsAPI : {
 
   getById: (id: string) => fetchJSON(`${API_BASE}/bookings/${id}`),
 
+  getMine: () => fetchJSON(`${API_BASE}/bookings/mine`),
+
   create: (data: any) =>
     fetchJSON(`${API_BASE}/bookings`, {
       method: 'POST',
@@ -127,5 +129,27 @@ export const bookingsAPI = USE_MOCK ? mockBookingsAPI : {
   cancel: (id: string) =>
     fetchJSON(`${API_BASE}/bookings/${id}/cancel`, {
       method: 'PATCH',
+    }),
+};
+
+// Wishes API (önskemål — reaktiv väg)
+export const wishesAPI = USE_MOCK ? mockWishesAPI : {
+  getAll: (params?: { location_id?: string; status?: string }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.location_id) searchParams.append('location_id', params.location_id);
+    if (params?.status) searchParams.append('status', params.status);
+    return fetchJSON(`${API_BASE}/wishes?${searchParams}`);
+  },
+
+  create: (data: any) =>
+    fetchJSON(`${API_BASE}/wishes`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateStatus: (id: string, status: string) =>
+    fetchJSON(`${API_BASE}/wishes/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
     }),
 };

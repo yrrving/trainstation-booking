@@ -48,6 +48,23 @@ interface Booking {
   state: string;
   created_at: string;
   updated_at: string;
+  username?: string;
+  option_label?: string;
+}
+
+interface Wish {
+  id: string;
+  location_id: string;
+  mode: string;
+  option_id?: string;
+  option_label?: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  desired_time: string;
+  message?: string;
+  status: string;
+  created_at: string;
 }
 
 // ─── In-memory state ──────────────────────────────────────────────────────────
@@ -99,6 +116,7 @@ const bookingOptions = new Map<string, BookingOption>([
 ]);
 
 const bookings = new Map<string, Booking>();
+const wishes = new Map<string, Wish>();
 
 // ─── Availability algorithm (ported from backend) ─────────────────────────────
 
@@ -301,9 +319,18 @@ export const mockBookingsAPI = {
       state: 'confirmed',
       created_at: ts,
       updated_at: ts,
+      username: session.user?.username,
+      option_label: option.label,
     };
     bookings.set(id, booking);
     return ok({ booking });
+  },
+  getMine: () => {
+    requireAuth();
+    const mine = Array.from(bookings.values())
+      .filter(b => b.username === session.user?.username)
+      .sort((a, b) => a.start_time.localeCompare(b.start_time));
+    return ok({ bookings: mine });
   },
   cancel: (id: string) => {
     requireAuth();
@@ -320,5 +347,47 @@ export const mockBookingsAPI = {
     const updated = { ...b, state: 'cancelled', updated_at: new Date().toISOString() };
     bookings.set(id, updated);
     return ok({ booking: updated });
+  },
+};
+
+export const mockWishesAPI = {
+  getAll: (params?: { location_id?: string; status?: string }) => {
+    requireAdmin();
+    let ws = Array.from(wishes.values());
+    if (params?.location_id) ws = ws.filter(w => w.location_id === params.location_id);
+    if (params?.status)      ws = ws.filter(w => w.status === params.status);
+    ws.sort((a, b) => b.created_at.localeCompare(a.created_at));
+    return ok({ wishes: ws });
+  },
+  create: (data: any) => {
+    requireAuth();
+    if (!data.name)                                 return fail('Namn krävs');
+    if (!data.desired_time)                          return fail('Önskad tid krävs');
+    if (!data.email && !data.phone)                  return fail('E-post eller telefon krävs');
+    const id = crypto.randomUUID();
+    const wish: Wish = {
+      id,
+      location_id: data.location_id,
+      mode: data.mode,
+      option_id: data.option_id,
+      option_label: data.option_label,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      desired_time: data.desired_time,
+      message: data.message,
+      status: 'new',
+      created_at: new Date().toISOString(),
+    };
+    wishes.set(id, wish);
+    return ok({ wish });
+  },
+  updateStatus: (id: string, status: string) => {
+    requireAdmin();
+    const w = wishes.get(id);
+    if (!w) return fail('Önskemål hittades inte');
+    const updated = { ...w, status };
+    wishes.set(id, updated);
+    return ok({ wish: updated });
   },
 };

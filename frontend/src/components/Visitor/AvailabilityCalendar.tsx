@@ -6,9 +6,10 @@ import { DateTime } from 'luxon';
 interface AvailabilityCalendarProps {
   bookingOption: BookingOption;
   onSelectSlot: (slot: TimeSlot) => void;
+  onSendWish?: () => void;
 }
 
-export default function AvailabilityCalendar({ bookingOption, onSelectSlot }: AvailabilityCalendarProps) {
+export default function AvailabilityCalendar({ bookingOption, onSelectSlot, onSendWish }: AvailabilityCalendarProps) {
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -109,8 +110,16 @@ export default function AvailabilityCalendar({ bookingOption, onSelectSlot }: Av
 
       {/* Available slots grouped by date */}
       {Object.keys(slotsByDate).length === 0 ? (
-        <div className="text-center py-8 text-gray-400">
-          Inga lediga tider under denna period. Prova en annan vecka.
+        <div className="text-center py-8 space-y-3">
+          <p className="text-gray-400">Inga lediga tider under denna period. Prova en annan vecka.</p>
+          {onSendWish && (
+            <button
+              onClick={onSendWish}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition"
+            >
+              Skicka önskemål om annan tid
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-6">

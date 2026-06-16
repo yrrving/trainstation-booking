@@ -6,10 +6,11 @@ import OptionList from '../components/Admin/OptionList';
 import OptionEditor from '../components/Admin/OptionEditor';
 import BookingList from '../components/Admin/BookingList';
 import BookingFilters from '../components/Admin/BookingFilters';
+import WishList from '../components/Admin/WishList';
 import type { Location, BookingOption } from '../types';
 import { BookingMode } from '../types';
 
-type AdminView = 'location_management' | 'booking_management';
+type AdminView = 'location_management' | 'booking_management' | 'wishes';
 
 const MODE_LABELS: Record<BookingMode, string> = {
   [BookingMode.HANDLEDNING]: 'Handledning',
@@ -64,6 +65,16 @@ export default function AdminPage() {
             }`}
           >
             Hantera bokningar
+          </button>
+          <button
+            onClick={() => setView('wishes')}
+            className={`px-4 py-2 font-medium transition ${
+              view === 'wishes'
+                ? 'border-b-2 border-blue-500 text-blue-400'
+                : 'text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            Önskemål
           </button>
         </div>
 
@@ -171,6 +182,9 @@ export default function AdminPage() {
             <BookingList filters={bookingFilters} />
           </div>
         )}
+
+        {/* Wishes View */}
+        {view === 'wishes' && <WishList />}
       </div>
     </div>
   );

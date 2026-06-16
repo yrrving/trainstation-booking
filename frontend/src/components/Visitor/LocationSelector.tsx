@@ -43,6 +43,16 @@ export default function LocationSelector() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-gray-100">Välj plats</h2>
+
+      <div className="flex items-start gap-3 bg-blue-900/30 border border-blue-800 rounded-lg px-4 py-3">
+        <span className="text-lg leading-none">ℹ️</span>
+        <p className="text-sm text-blue-200">
+          <span className="font-semibold">Endast i prototypen.</span> I skarpt läge är din plats
+          redan vald – du loggar in och ser direkt din lokals bokningar (t.ex. Vivalla/Örebro),
+          utan att välja plats.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {locations.map((location) => (
           <button

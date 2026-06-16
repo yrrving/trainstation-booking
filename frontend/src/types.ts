@@ -75,6 +75,43 @@ export type Booking = {
   state: BookingState;
   created_at: string;
   updated_at: string;
+  // Prototyp: kopplar bokningen till inloggad användare + visningsetikett
+  username?: string;
+  option_label?: string;
+}
+
+// Önskemål (reaktiv väg) — besökaren skickar in när inget passar
+export const WishStatus = {
+  NEW: 'new',
+  HANDLED: 'handled',
+} as const;
+export type WishStatus = typeof WishStatus[keyof typeof WishStatus];
+
+export type Wish = {
+  id: string;
+  location_id: string;
+  mode: BookingMode;
+  option_id?: string;
+  option_label?: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  desired_time: string;
+  message?: string;
+  status: WishStatus;
+  created_at: string;
+}
+
+export type CreateWishRequest = {
+  location_id: string;
+  mode: BookingMode;
+  option_id?: string;
+  option_label?: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  desired_time: string;
+  message?: string;
 }
 
 export type TimeSlot = {
