@@ -15,10 +15,10 @@ export default function LocationSelector() {
 
   async function loadLocations() {
     try {
-      const response: any = await locationsAPI.getAll();
+      const response = await locationsAPI.getAll();
       setLocations(response.locations);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setLoading(false);
     }
@@ -27,8 +27,8 @@ export default function LocationSelector() {
   async function handleSelectLocation(locationId: string) {
     try {
       await setSelectedLocation(locationId);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     }
   }
 

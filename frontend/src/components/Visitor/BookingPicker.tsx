@@ -20,18 +20,24 @@ const MODE_LABELS: Record<BookingMode, string> = {
 export default function BookingPicker({ locationId, onSelectOption, onSendWish }: BookingPickerProps) {
   const [location, setLocation] = useState<Location | null>(null);
   const [selectedMode, setSelectedMode] = useState<BookingMode | ''>('');
-  const [options, setOptions] = useState<BookingOption[]>([]);
-  const [loadingLocation, setLoadingLocation] = useState(true);
-  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [fetchedOptions, setFetchedOptions] = useState<BookingOption[]>([]);
+  const [locationLoadedFor, setLocationLoadedFor] = useState<string | null>(null);
+  const [optionsLoadedFor, setOptionsLoadedFor] = useState<string | null>(null);
   const [error, setError] = useState('');
+
+  // Loading states are derived from which id/mode the data was fetched for,
+  // so the effects never need to set a loading flag synchronously
+  const loadingLocation = locationLoadedFor !== locationId;
+  const optionsKey = selectedMode ? `${locationId}:${selectedMode}` : null;
+  const loadingOptions = optionsKey !== null && optionsLoadedFor !== optionsKey;
+  const options = optionsKey !== null && optionsLoadedFor === optionsKey ? fetchedOptions : [];
 
   // Load the location to know which modes are enabled
   useEffect(() => {
     let active = true;
-    setLoadingLocation(true);
     locationsAPI
       .getById(locationId)
-      .then((res: any) => {
+      .then((res) => {
         if (!active) return;
         setLocation(res.location);
         // Auto-select the first mode so the panel is never empty
@@ -39,8 +45,8 @@ export default function BookingPicker({ locationId, onSelectOption, onSendWish }
           setSelectedMode(res.location.enabled_modes[0]);
         }
       })
-      .catch((err: any) => active && setError(err.message))
-      .finally(() => active && setLoadingLocation(false));
+      .catch((err) => active && setError((err instanceof Error ? err.message : 'Okänt fel')))
+      .finally(() => active && setLocationLoadedFor(locationId));
     return () => {
       active = false;
     };
@@ -48,17 +54,14 @@ export default function BookingPicker({ locationId, onSelectOption, onSendWish }
 
   // Load options dynamically whenever the selected mode changes
   useEffect(() => {
-    if (!selectedMode) {
-      setOptions([]);
-      return;
-    }
+    if (!selectedMode) return;
+    const key = `${locationId}:${selectedMode}`;
     let active = true;
-    setLoadingOptions(true);
     bookingOptionsAPI
       .getAll({ location_id: locationId, mode: selectedMode, is_active: true })
-      .then((res: any) => active && setOptions(res.options))
-      .catch((err: any) => active && setError(err.message))
-      .finally(() => active && setLoadingOptions(false));
+      .then((res) => active && setFetchedOptions(res.options))
+      .catch((err) => active && setError((err instanceof Error ? err.message : 'Okänt fel')))
+      .finally(() => active && setOptionsLoadedFor(key));
     return () => {
       active = false;
     };

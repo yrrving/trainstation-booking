@@ -32,12 +32,20 @@ export default function BookingFilters({ onFilterChange }: BookingFiltersProps) 
   });
 
   useEffect(() => {
+    async function loadLocations() {
+      try {
+        const response = await locationsAPI.getAll();
+        setLocations(response.locations);
+      } catch (err) {
+        console.error('Failed to load locations:', err);
+      }
+    }
     loadLocations();
   }, []);
 
   useEffect(() => {
     // Clean up empty filters before sending
-    const cleanFilters: any = {};
+    const cleanFilters: Parameters<BookingFiltersProps['onFilterChange']>[0] = {};
     if (filters.location_id) cleanFilters.location_id = filters.location_id;
     if (filters.mode) cleanFilters.mode = filters.mode;
     if (filters.start_date) cleanFilters.start_date = filters.start_date;
@@ -45,16 +53,7 @@ export default function BookingFilters({ onFilterChange }: BookingFiltersProps) 
     if (filters.state) cleanFilters.state = filters.state;
 
     onFilterChange(cleanFilters);
-  }, [filters]);
-
-  async function loadLocations() {
-    try {
-      const response: any = await locationsAPI.getAll();
-      setLocations(response.locations);
-    } catch (err: any) {
-      console.error('Failed to load locations:', err);
-    }
-  }
+  }, [filters, onFilterChange]);
 
   function handleReset() {
     setFilters({

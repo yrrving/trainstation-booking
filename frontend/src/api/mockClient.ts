@@ -2,70 +2,13 @@
 // Mirrors the exact response shapes of the real Express backend.
 
 import { DateTime } from 'luxon';
+import type {
+  User, Location, BookingOption, Booking, Wish, BookingMode, WishStatus,
+  CreateBookingRequest, CreateBookingOptionRequest,
+  UpdateBookingOptionRequest, CreateWishRequest,
+} from '../types';
 
 const TIMEZONE = 'Europe/Stockholm';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface User { username: string; role: 'visitor' | 'admin' }
-
-interface WeeklyHours { weekday: number; start: string; end: string }
-
-interface BookingOption {
-  id: string;
-  location_id: string;
-  mode: string;
-  label: string;
-  description: string;
-  duration_minutes: number;
-  capacity: { max_people: number };
-  rules: {
-    slot_increment_minutes: number;
-    min_advance_minutes: number;
-    max_advance_days: number;
-    cancellation_cutoff_minutes: number;
-    buffer_before_minutes: number;
-    buffer_after_minutes: number;
-  };
-  weekly_hours: WeeklyHours[];
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Location { id: string; name: string; enabled_modes: string[] }
-
-interface Booking {
-  id: string;
-  booking_option_id: string;
-  location_id: string;
-  mode: string;
-  start_time: string;
-  end_time: string;
-  booker: { name: string; email?: string; phone?: string };
-  num_people: number;
-  notes?: string;
-  state: string;
-  created_at: string;
-  updated_at: string;
-  username?: string;
-  option_label?: string;
-}
-
-interface Wish {
-  id: string;
-  location_id: string;
-  mode: string;
-  option_id?: string;
-  option_label?: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  desired_time: string;
-  message?: string;
-  status: string;
-  created_at: string;
-}
 
 // ─── In-memory state ──────────────────────────────────────────────────────────
 
@@ -220,7 +163,7 @@ export const mockLocationsAPI = {
     const loc = locations.get(id);
     return loc ? ok({ location: loc }) : fail('Plats hittades inte');
   },
-  updateModes: (id: string, enabled_modes: string[]) => {
+  updateModes: (id: string, enabled_modes: BookingMode[]) => {
     requireAdmin();
     const loc = locations.get(id);
     if (!loc) return fail('Plats hittades inte');
@@ -241,7 +184,7 @@ export const mockBookingOptionsAPI = {
     const opt = bookingOptions.get(id);
     return opt ? ok({ option: opt }) : fail('Alternativ hittades inte');
   },
-  create: (data: any) => {
+  create: (data: CreateBookingOptionRequest) => {
     requireAdmin();
     const id = crypto.randomUUID();
     const ts = new Date().toISOString();
@@ -249,7 +192,7 @@ export const mockBookingOptionsAPI = {
     bookingOptions.set(id, option);
     return ok({ option });
   },
-  update: (id: string, data: any) => {
+  update: (id: string, data: UpdateBookingOptionRequest) => {
     requireAdmin();
     const opt = bookingOptions.get(id);
     if (!opt) return fail('Alternativ hittades inte');
@@ -295,7 +238,7 @@ export const mockBookingsAPI = {
     const b = bookings.get(id);
     return b ? ok({ booking: b }) : fail('Bokning hittades inte');
   },
-  create: (data: any) => {
+  create: (data: CreateBookingRequest) => {
     requireAuth();
     const option = bookingOptions.get(data.booking_option_id);
     if (!option)             return fail('Alternativ hittades inte');
@@ -344,7 +287,7 @@ export const mockBookingsAPI = {
         return fail(`Kan inte avboka inom ${option.rules.cancellation_cutoff_minutes} minuter från start`);
       }
     }
-    const updated = { ...b, state: 'cancelled', updated_at: new Date().toISOString() };
+    const updated: Booking = { ...b, state: 'cancelled', updated_at: new Date().toISOString() };
     bookings.set(id, updated);
     return ok({ booking: updated });
   },
@@ -359,7 +302,7 @@ export const mockWishesAPI = {
     ws.sort((a, b) => b.created_at.localeCompare(a.created_at));
     return ok({ wishes: ws });
   },
-  create: (data: any) => {
+  create: (data: CreateWishRequest) => {
     requireAuth();
     if (!data.name)                                 return fail('Namn krävs');
     if (!data.desired_time)                          return fail('Önskad tid krävs');
@@ -386,7 +329,7 @@ export const mockWishesAPI = {
     requireAdmin();
     const w = wishes.get(id);
     if (!w) return fail('Önskemål hittades inte');
-    const updated = { ...w, status };
+    const updated: Wish = { ...w, status: status as WishStatus };
     wishes.set(id, updated);
     return ok({ wish: updated });
   },

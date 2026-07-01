@@ -21,8 +21,8 @@ export default function LoginPage() {
       } else {
         navigate('/visitor');
       }
-    } catch (err: any) {
-      setError(err.message || 'Fel användarnamn eller lösenord');
+    } catch (err) {
+      setError((err instanceof Error && err.message) || 'Fel användarnamn eller lösenord');
     }
   }
 

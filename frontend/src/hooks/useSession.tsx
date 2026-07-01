@@ -1,5 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-import { sessionAPI } from '../api/client';
+import { createContext, useContext } from 'react';
 
 interface SessionContextType {
   selectedLocationId: string | null;
@@ -7,32 +6,7 @@ interface SessionContextType {
   clearSelectedLocation: () => void;
 }
 
-const SessionContext = createContext<SessionContextType | undefined>(undefined);
-
-export function SessionProvider({ children }: { children: ReactNode }) {
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
-
-  async function setSelectedLocation(locationId: string) {
-    await sessionAPI.setLocation(locationId);
-    setSelectedLocationId(locationId);
-  }
-
-  async function clearSelectedLocation() {
-    setSelectedLocationId(null);
-  }
-
-  return (
-    <SessionContext.Provider
-      value={{
-        selectedLocationId,
-        setSelectedLocation,
-        clearSelectedLocation,
-      }}
-    >
-      {children}
-    </SessionContext.Provider>
-  );
-}
+export const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export function useSession() {
   const context = useContext(SessionContext);

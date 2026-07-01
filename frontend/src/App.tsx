@@ -1,8 +1,9 @@
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 const Router = import.meta.env.VITE_USE_MOCK === 'true' ? HashRouter : BrowserRouter;
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import { SessionProvider } from './hooks/useSession';
+import { useAuth } from './hooks/useAuth';
+import { AuthProvider } from './hooks/AuthProvider';
+import { SessionProvider } from './hooks/SessionProvider';
 import LoginPage from './pages/LoginPage';
 import VisitorPage from './pages/VisitorPage';
 import AdminPage from './pages/AdminPage';

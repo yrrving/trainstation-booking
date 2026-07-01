@@ -1,5 +1,9 @@
 // API client for backend communication
 
+import type {
+  User, Location, BookingOption, Booking, Wish, TimeSlot, BookingMode,
+  CreateBookingRequest, CreateBookingOptionRequest, UpdateBookingOptionRequest, CreateWishRequest,
+} from '../types';
 import {
   mockAuthAPI, mockSessionAPI, mockLocationsAPI,
   mockBookingOptionsAPI, mockAvailabilityAPI, mockBookingsAPI, mockWishesAPI,
@@ -29,23 +33,23 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
 // Auth API
 export const authAPI = USE_MOCK ? mockAuthAPI : {
   login: (username: string, password: string) =>
-    fetchJSON(`${API_BASE}/auth/login`, {
+    fetchJSON<{ user: User }>(`${API_BASE}/auth/login`, {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     }),
 
   logout: () =>
-    fetchJSON(`${API_BASE}/auth/logout`, {
+    fetchJSON<{ success: boolean }>(`${API_BASE}/auth/logout`, {
       method: 'POST',
     }),
 
-  me: () => fetchJSON(`${API_BASE}/auth/me`),
+  me: () => fetchJSON<{ user: User; selected_location_id: string | null }>(`${API_BASE}/auth/me`),
 };
 
 // Session API
 export const sessionAPI = USE_MOCK ? mockSessionAPI : {
   setLocation: (location_id: string) =>
-    fetchJSON(`${API_BASE}/session/location`, {
+    fetchJSON<{ success: boolean }>(`${API_BASE}/session/location`, {
       method: 'POST',
       body: JSON.stringify({ location_id }),
     }),
@@ -53,12 +57,12 @@ export const sessionAPI = USE_MOCK ? mockSessionAPI : {
 
 // Locations API
 export const locationsAPI = USE_MOCK ? mockLocationsAPI : {
-  getAll: () => fetchJSON(`${API_BASE}/locations`),
+  getAll: () => fetchJSON<{ locations: Location[] }>(`${API_BASE}/locations`),
 
-  getById: (id: string) => fetchJSON(`${API_BASE}/locations/${id}`),
+  getById: (id: string) => fetchJSON<{ location: Location }>(`${API_BASE}/locations/${id}`),
 
-  updateModes: (id: string, enabled_modes: string[]) =>
-    fetchJSON(`${API_BASE}/locations/${id}/modes`, {
+  updateModes: (id: string, enabled_modes: BookingMode[]) =>
+    fetchJSON<{ location: Location }>(`${API_BASE}/locations/${id}/modes`, {
       method: 'PATCH',
       body: JSON.stringify({ enabled_modes }),
     }),
@@ -72,25 +76,25 @@ export const bookingOptionsAPI = USE_MOCK ? mockBookingOptionsAPI : {
     if (params?.mode) searchParams.append('mode', params.mode);
     if (params?.is_active !== undefined) searchParams.append('is_active', String(params.is_active));
 
-    return fetchJSON(`${API_BASE}/booking-options?${searchParams}`);
+    return fetchJSON<{ options: BookingOption[] }>(`${API_BASE}/booking-options?${searchParams}`);
   },
 
-  getById: (id: string) => fetchJSON(`${API_BASE}/booking-options/${id}`),
+  getById: (id: string) => fetchJSON<{ option: BookingOption }>(`${API_BASE}/booking-options/${id}`),
 
-  create: (data: any) =>
-    fetchJSON(`${API_BASE}/booking-options`, {
+  create: (data: CreateBookingOptionRequest) =>
+    fetchJSON<{ option: BookingOption }>(`${API_BASE}/booking-options`, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
-  update: (id: string, data: any) =>
-    fetchJSON(`${API_BASE}/booking-options/${id}`, {
+  update: (id: string, data: UpdateBookingOptionRequest) =>
+    fetchJSON<{ option: BookingOption }>(`${API_BASE}/booking-options/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
 
   delete: (id: string) =>
-    fetchJSON(`${API_BASE}/booking-options/${id}`, {
+    fetchJSON<{ success: boolean }>(`${API_BASE}/booking-options/${id}`, {
       method: 'DELETE',
     }),
 };
@@ -99,7 +103,7 @@ export const bookingOptionsAPI = USE_MOCK ? mockBookingOptionsAPI : {
 export const availabilityAPI = USE_MOCK ? mockAvailabilityAPI : {
   getSlots: (booking_option_id: string, start_date: string, end_date: string) => {
     const params = new URLSearchParams({ booking_option_id, start_date, end_date });
-    return fetchJSON(`${API_BASE}/availability?${params}`);
+    return fetchJSON<{ slots: TimeSlot[] }>(`${API_BASE}/availability?${params}`);
   },
 };
 
@@ -113,21 +117,21 @@ export const bookingsAPI = USE_MOCK ? mockBookingsAPI : {
     if (params?.end_date) searchParams.append('end_date', params.end_date);
     if (params?.state) searchParams.append('state', params.state);
 
-    return fetchJSON(`${API_BASE}/bookings?${searchParams}`);
+    return fetchJSON<{ bookings: Booking[] }>(`${API_BASE}/bookings?${searchParams}`);
   },
 
-  getById: (id: string) => fetchJSON(`${API_BASE}/bookings/${id}`),
+  getById: (id: string) => fetchJSON<{ booking: Booking }>(`${API_BASE}/bookings/${id}`),
 
-  getMine: () => fetchJSON(`${API_BASE}/bookings/mine`),
+  getMine: () => fetchJSON<{ bookings: Booking[] }>(`${API_BASE}/bookings/mine`),
 
-  create: (data: any) =>
-    fetchJSON(`${API_BASE}/bookings`, {
+  create: (data: CreateBookingRequest) =>
+    fetchJSON<{ booking: Booking }>(`${API_BASE}/bookings`, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
   cancel: (id: string) =>
-    fetchJSON(`${API_BASE}/bookings/${id}/cancel`, {
+    fetchJSON<{ booking: Booking }>(`${API_BASE}/bookings/${id}/cancel`, {
       method: 'PATCH',
     }),
 };
@@ -138,17 +142,17 @@ export const wishesAPI = USE_MOCK ? mockWishesAPI : {
     const searchParams = new URLSearchParams();
     if (params?.location_id) searchParams.append('location_id', params.location_id);
     if (params?.status) searchParams.append('status', params.status);
-    return fetchJSON(`${API_BASE}/wishes?${searchParams}`);
+    return fetchJSON<{ wishes: Wish[] }>(`${API_BASE}/wishes?${searchParams}`);
   },
 
-  create: (data: any) =>
-    fetchJSON(`${API_BASE}/wishes`, {
+  create: (data: CreateWishRequest) =>
+    fetchJSON<{ wish: Wish }>(`${API_BASE}/wishes`, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
   updateStatus: (id: string, status: string) =>
-    fetchJSON(`${API_BASE}/wishes/${id}/status`, {
+    fetchJSON<{ wish: Wish }>(`${API_BASE}/wishes/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     }),

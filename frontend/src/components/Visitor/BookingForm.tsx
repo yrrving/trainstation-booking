@@ -51,8 +51,8 @@ export default function BookingForm({ bookingOption, selectedSlot, onSuccess, on
 
       await bookingsAPI.create(request);
       onSuccess();
-    } catch (err: any) {
-      setError(err.message || 'Något gick fel vid bokningen');
+    } catch (err) {
+      setError((err instanceof Error && err.message) || 'Något gick fel vid bokningen');
     } finally {
       setSubmitting(false);
     }

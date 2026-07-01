@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Booking } from '../../types';
 import { BookingState } from '../../types';
 import { bookingsAPI } from '../../api/client';
@@ -19,21 +19,21 @@ export default function BookingList({ filters }: BookingListProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadBookings();
-  }, [filters]);
-
-  async function loadBookings() {
+  const loadBookings = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await bookingsAPI.getAll(filters);
+      const response = await bookingsAPI.getAll(filters);
       setBookings(response.bookings);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setLoading(false);
     }
-  }
+  }, [filters]);
+
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
   async function handleCancel(bookingId: string) {
     if (!confirm('Är du säker på att du vill avboka denna bokning?')) {
@@ -43,8 +43,8 @@ export default function BookingList({ filters }: BookingListProps) {
     try {
       await bookingsAPI.cancel(bookingId);
       loadBookings(); // Reload list
-    } catch (err: any) {
-      alert('Fel vid avbokning: ' + err.message);
+    } catch (err) {
+      alert('Fel vid avbokning: ' + (err instanceof Error ? err.message : 'Okänt fel'));
     }
   }
 

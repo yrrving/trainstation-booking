@@ -22,19 +22,18 @@ export default function ModeSelector({ locationId, onSelectMode }: ModeSelectorP
   const [error, setError] = useState('');
 
   useEffect(() => {
+    async function loadLocation() {
+      try {
+        const response = await locationsAPI.getById(locationId);
+        setLocation(response.location);
+      } catch (err) {
+        setError((err instanceof Error ? err.message : 'Okänt fel'));
+      } finally {
+        setLoading(false);
+      }
+    }
     loadLocation();
   }, [locationId]);
-
-  async function loadLocation() {
-    try {
-      const response: any = await locationsAPI.getById(locationId);
-      setLocation(response.location);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   if (loading) {
     return <div className="text-center py-8 text-gray-300">Laddar bokningssätt...</div>;

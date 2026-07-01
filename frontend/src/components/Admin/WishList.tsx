@@ -25,13 +25,13 @@ export default function WishList() {
   async function load() {
     setLoading(true);
     try {
-      const [wRes, lRes]: any = await Promise.all([wishesAPI.getAll(), locationsAPI.getAll()]);
+      const [wRes, lRes] = await Promise.all([wishesAPI.getAll(), locationsAPI.getAll()]);
       setWishes(wRes.wishes);
       const map: Record<string, string> = {};
       (lRes.locations as Location[]).forEach((l) => (map[l.id] = l.name));
       setLocations(map);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setLoading(false);
     }
@@ -42,8 +42,8 @@ export default function WishList() {
     try {
       await wishesAPI.updateStatus(w.id, next);
       load();
-    } catch (err: any) {
-      alert('Kunde inte uppdatera: ' + err.message);
+    } catch (err) {
+      alert('Kunde inte uppdatera: ' + (err instanceof Error ? err.message : 'Okänt fel'));
     }
   }
 

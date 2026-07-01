@@ -42,8 +42,8 @@ export default function ModeToggle({ location, onUpdate }: ModeToggleProps) {
       setSuccess(true);
       onUpdate();
       setTimeout(() => setSuccess(false), 2000);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setSaving(false);
     }

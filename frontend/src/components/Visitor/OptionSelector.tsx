@@ -15,23 +15,22 @@ export default function OptionSelector({ locationId, mode, onSelectOption }: Opt
   const [error, setError] = useState('');
 
   useEffect(() => {
+    async function loadOptions() {
+      try {
+        const response = await bookingOptionsAPI.getAll({
+          location_id: locationId,
+          mode,
+          is_active: true,
+        });
+        setOptions(response.options);
+      } catch (err) {
+        setError((err instanceof Error ? err.message : 'Okänt fel'));
+      } finally {
+        setLoading(false);
+      }
+    }
     loadOptions();
   }, [locationId, mode]);
-
-  async function loadOptions() {
-    try {
-      const response: any = await bookingOptionsAPI.getAll({
-        location_id: locationId,
-        mode,
-        is_active: true,
-      });
-      setOptions(response.options);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   if (loading) {
     return <div className="text-center py-8 text-gray-300">Laddar alternativ...</div>;

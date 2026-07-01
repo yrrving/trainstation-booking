@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { BookingOption } from '../../types';
 import { BookingMode } from '../../types';
 import { bookingOptionsAPI } from '../../api/client';
@@ -15,24 +15,24 @@ export default function OptionList({ locationId, mode, onEdit, onRefresh }: Opti
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadOptions();
-  }, [locationId, mode]);
-
-  async function loadOptions() {
+  const loadOptions = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await bookingOptionsAPI.getAll({
+      const response = await bookingOptionsAPI.getAll({
         location_id: locationId,
         mode,
       });
       setOptions(response.options);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setLoading(false);
     }
-  }
+  }, [locationId, mode]);
+
+  useEffect(() => {
+    loadOptions();
+  }, [loadOptions]);
 
   async function handleDelete(optionId: string) {
     if (!confirm('Är du säker på att du vill ta bort detta bokningsalternativ?')) {
@@ -43,8 +43,8 @@ export default function OptionList({ locationId, mode, onEdit, onRefresh }: Opti
       await bookingOptionsAPI.delete(optionId);
       loadOptions();
       onRefresh?.();
-    } catch (err: any) {
-      alert('Fel vid borttagning: ' + err.message);
+    } catch (err) {
+      alert('Fel vid borttagning: ' + (err instanceof Error ? err.message : 'Okänt fel'));
     }
   }
 

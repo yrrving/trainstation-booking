@@ -20,10 +20,10 @@ export default function MyBookings({ onBookNew }: MyBookingsProps) {
   async function loadBookings() {
     setLoading(true);
     try {
-      const res: any = await bookingsAPI.getMine();
+      const res = await bookingsAPI.getMine();
       setBookings(res.bookings);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setLoading(false);
     }
@@ -34,8 +34,8 @@ export default function MyBookings({ onBookNew }: MyBookingsProps) {
     try {
       await bookingsAPI.cancel(id);
       loadBookings();
-    } catch (err: any) {
-      alert('Kunde inte avboka: ' + err.message);
+    } catch (err) {
+      alert('Kunde inte avboka: ' + (err instanceof Error ? err.message : 'Okänt fel'));
     }
   }
 

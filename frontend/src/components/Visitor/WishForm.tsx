@@ -57,8 +57,8 @@ export default function WishForm({
       };
       await wishesAPI.create(request);
       onSubmitted();
-    } catch (err: any) {
-      setError(err.message || 'Något gick fel');
+    } catch (err) {
+      setError((err instanceof Error && err.message) || 'Något gick fel');
     } finally {
       setSubmitting(false);
     }

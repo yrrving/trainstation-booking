@@ -43,7 +43,7 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
     setWeeklyHours(weeklyHours.filter((_, i) => i !== index));
   }
 
-  function updateWeeklyHour(index: number, field: keyof WeeklyHours, value: any) {
+  function updateWeeklyHour(index: number, field: keyof WeeklyHours, value: string | number) {
     const updated = [...weeklyHours];
     updated[index] = { ...updated[index], [field]: value };
     setWeeklyHours(updated);
@@ -87,8 +87,8 @@ export default function OptionEditor({ locationId, mode, existingOption, onSucce
       }
 
       onSuccess();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err instanceof Error ? err.message : 'Okänt fel'));
     } finally {
       setSubmitting(false);
     }

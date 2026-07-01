@@ -22,30 +22,29 @@ export default function AvailabilityCalendar({ bookingOption, onSelectSlot, onSe
   }, []);
 
   useEffect(() => {
-    if (selectedDate) {
-      loadAvailability();
+    if (!selectedDate) return;
+
+    async function loadAvailability() {
+      setLoading(true);
+      try {
+        // Load slots for the selected week (7 days from selected date)
+        const startDate = selectedDate;
+        const endDate = DateTime.fromISO(selectedDate)
+          .plus({ days: 6 })
+          .toISODate();
+
+        if (!endDate) return;
+
+        const response = await availabilityAPI.getSlots(bookingOption.id, startDate, endDate);
+        setSlots(response.slots);
+      } catch (err) {
+        setError((err instanceof Error ? err.message : 'Okänt fel'));
+      } finally {
+        setLoading(false);
+      }
     }
+    loadAvailability();
   }, [selectedDate, bookingOption.id]);
-
-  async function loadAvailability() {
-    setLoading(true);
-    try {
-      // Load slots for the selected week (7 days from selected date)
-      const startDate = selectedDate;
-      const endDate = DateTime.fromISO(selectedDate)
-        .plus({ days: 6 })
-        .toISODate();
-
-      if (!endDate) return;
-
-      const response: any = await availabilityAPI.getSlots(bookingOption.id, startDate, endDate);
-      setSlots(response.slots);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSelectedDate(e.target.value);
